@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-default"> 
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -8,18 +8,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Dating App</a>
+      <a class="navbar-brand" [routerLink]="['/home']" routerLinkActive="router-link-active" >Dating App</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav" *ngIf="loggedIn()">
         <li>
-          <a href="#">Matches</a>
+          <a [routerLink]="['/members']"  routerLinkActive="router-link-active">Matches</a>
         </li>
         <li>
-          <a href="#">Lists</a>
+          <a [routerLink]="['/lists']" routerLinkActive="router-link-active" >Lists</a>
         </li>
         <li>
-          <a href="#">Messages</a>
+          <a [routerLink]="['/messages']" routerLinkActive="router-link-active" >Messages</a>
         </li>
       </ul>
       <form *ngIf="!loggedIn()" #loginForm="ngForm" class="navbar-form navbar-right" (ngSubmit)="login()">
@@ -33,21 +33,25 @@
       </form>
 
       <ul *ngIf="loggedIn()" class="nav navbar-nav navbar-right">
-          <li><a (click)="logout()">Log Out</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" 
-            aria-haspopup="true" aria-expanded="false">Welcome user!<span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#"><i class="fa fa-user"></i>Edit profile</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a (click)="logout()"><i class="fa fa-sign-out"></i>Log out</a></li>
-            </ul>
-          </li>
-        </ul>
+        <li  class="dropdown" dropdown>
+          <a (click)="false" class="dropdown-toggle"dropdownToggle>Welcome {{auth.decodedToken?.unique_name | titlecase}}
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" *dropdownMenu>
+            <li>
+              <a href="#">
+                <i class="fa fa-user"></i>Edit profile</a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li>
+              <a (click)="logout()">
+                <i class="fa fa-sign-out"></i>Log out</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
 
     </div>
     <!--/.navbar-collapse -->
   </div>
 </nav>
-
-
