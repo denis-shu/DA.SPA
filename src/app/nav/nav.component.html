@@ -33,13 +33,16 @@
       </form>
 
       <ul *ngIf="loggedIn()" class="nav navbar-nav navbar-right">
+        <li>
+          <img src="{{photoUrl}}"  alt="">
+        </li>
         <li  class="dropdown" dropdown>
           <a (click)="false" class="dropdown-toggle"dropdownToggle>Welcome {{auth.decodedToken?.unique_name | titlecase}}
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" *dropdownMenu>
             <li>
-              <a href="#">
+              <a [routerLink]="['/member/edit']" routerLinkActive="router-link-active" >
                 <i class="fa fa-user"></i>Edit profile</a>
             </li>
             <li role="separator" class="divider"></li>

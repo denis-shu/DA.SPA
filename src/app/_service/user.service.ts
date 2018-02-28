@@ -19,8 +19,24 @@ export class UserService {
 
   getUser(id): Observable<User> {
     return this.authHttp
-      .get(this.baseUrl + "users/" + id)
+      .get(this.baseUrl + 'users/' + id)
       .map(res => <User>res.json());
+  }
+  updateUser(id: number, user: User) {
+    return this.authHttp.put(this.baseUrl + 'users/' + id, user);
+  }
+
+  setMainPhoto(userId: number, id: number) {
+    return this.authHttp.post(
+      this.baseUrl + 'users/' + userId + '/photos/' + id + '/setMain',
+      {}
+    );
+  }
+
+  deletePhoto(userId: number, id: number) {
+    return this.authHttp.delete(
+      this.baseUrl + 'users/' + userId + '/photos/' + id
+    );
   }
 
   // private jwt() {

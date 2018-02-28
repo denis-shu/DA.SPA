@@ -1,17 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
+import { User } from '../_Models/User';
 
 @Injectable()
 export class AuthService {
   baseurl = 'http://localhost:5000/api/auth/';
   userToken: any;
   decodedToken: any;
+  currenrUser: User;
   jwtHelper: JwtHelper = new JwtHelper();
+  private photoUrl = new BehaviorSubject<string>('../../assets/user.jpg');
+  currentPhotoUrl = this.photoUrl.asObservable();
 
   // tslint:disable-next-line:no-shadowed-variable
   constructor(private http: Http) {}
+
+  changeMemberPhoto(photoUrl: string) {
+    this.photoUrl.next(photoUrl);
+  }
 
   // tslint:disable-next-line:eofline
 
@@ -21,11 +30,14 @@ export class AuthService {
       .map((res: Response) => {
         console.log(res, 'ress');
         const user = res.json();
-        if (user) {
+        if (user && user.tokenString) {
           localStorage.setItem('token', user.tokenString);
+          localStorage.setItem('user', JSON.stringify(user.user));
           this.decodedToken = this.jwtHelper.decodeToken(user.tokenString);
+          this.currenrUser = user.user;
           console.log(this.decodedToken);
           this.userToken = user.tokenString;
+          this.changeMemberPhoto(this.currenrUser.photoUrl);
         }
       });
   }

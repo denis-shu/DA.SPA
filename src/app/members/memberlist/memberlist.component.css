@@ -3,3 +3,7 @@
     flex-flow: row wrap;
     align-content: flex-end
 }
+
+.container{
+    max-height: 100px;
+}

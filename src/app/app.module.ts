@@ -22,6 +22,11 @@ import { MemberCartComponent } from './members/member-cart/member-cart.component
 import { AuthModule } from './auth/auth.module';
 import { MemberDetailComponent } from './members/MemberDetail/MemberDetail.component';
 import { DetailResolver } from './_resolves/detail.resolver';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { MemberEditResolver } from './_resolves/member-edit.resolver';
+import { PreventUnsafeChanges } from './_guard/prevent-unsavedchanges.guard';
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [
@@ -33,7 +38,9 @@ import { DetailResolver } from './_resolves/detail.resolver';
     ListsComponent,
     MessagesComponent,
     MemberCartComponent,
-    MemberDetailComponent
+    MemberDetailComponent,
+    MemberEditComponent,
+    PhotoEditorComponent
   ],
   imports: [
     BrowserModule,
@@ -43,9 +50,17 @@ import { DetailResolver } from './_resolves/detail.resolver';
     RouterModule.forRoot(appRoutes),
     AuthModule,
     TabsModule.forRoot(),
-    NgxGalleryModule
+    NgxGalleryModule,
+    FileUploadModule
   ],
-  providers: [AuthService, AlertifyService, AuthGuard, UserService, DetailResolver],
+  providers: [
+    AuthService, 
+    AlertifyService,
+    AuthGuard, 
+    UserService, 
+    DetailResolver, 
+    MemberEditResolver,
+  PreventUnsafeChanges],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
