@@ -4,14 +4,14 @@ import { AuthService } from "./../../_service/auth.service";
 import { environment } from "./../../../environments/environment";
 import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
 import { FileUploader } from "ng2-file-upload";
-import { Photo } from "../../_Models/Photo";\
-import * as _ from 'underscore';
+import { Photo } from "../../_Models/Photo";
+import * as _ from "underscore";
 import { JsonpModule } from "@angular/http";
 
 @Component({
   selector: "app-photo-editor",
   templateUrl: "./photo-editor.component.html",
-  styleUrls: ["./photo-editor.component.css"]
+  styleUrls: ['./photo-editor.component.css']
 })
 export class PhotoEditorComponent implements OnInit {
   @Input() photos: Photo[];
@@ -53,24 +53,29 @@ export class PhotoEditorComponent implements OnInit {
           url: res.url,
           dateAdded: res.dateAdded,
           description: res.description,
-          isMainPhoto: res.isMainPhoto,
-          
+          isMainPhoto: res.isMainPhoto
         };
         this.photos.push(photo);
+        if (photo.isMainPhoto) {
+          this.auth.changeMemberPhoto(photo.url);
+          this.auth.currenrUser.photoUrl = photo.url;
+          localStorage.setItem('user', JSON.stringify(this.auth.currenrUser));
+        }
       }
     };
   }
-  deletePhoto(id:number){
+  deletePhoto(id: number) {
     this.alert.confirm('A U sure to delete this photo?', () => {
-      this.userService.deletePhoto(this.auth.decodedToken.nameid, id).subscribe(() => {
-        this.photos.splice(_.findIndex(this.photos, {id: id}), 1);
-        this.alert.success('Photo has been deleted');
-      },
-    err =>  {
-      this.alert.error('Failed to delete');
+      this.userService.deletePhoto(this.auth.decodedToken.nameid, id).subscribe(
+        () => {
+          this.photos.splice(_.findIndex(this.photos, { id: id }), 1);
+          this.alert.success('Photo has been deleted');
+        },
+        err => {
+          this.alert.error('Failed to delete');
+        }
+      );
     });
-    });
-
   }
 
   setMainPhoto(photo: Photo) {
@@ -79,7 +84,7 @@ export class PhotoEditorComponent implements OnInit {
       .setMainPhoto(this.auth.decodedToken.nameid, photo.id)
       .subscribe(
         () => {
-          this.currentMain = _.findWhere(this.photos, {isMainPhoto: true});
+          this.currentMain = _.findWhere(this.photos, { isMainPhoto: true });
           this.currentMain.isMainPhoto = false;
           photo.isMainPhoto = true;
           this.getMemberPhotoChange.emit(photo.url);

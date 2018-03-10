@@ -37,15 +37,20 @@ export class AuthService {
           this.currenrUser = user.user;
           console.log(this.decodedToken);
           this.userToken = user.tokenString;
+          
+          if (this.currenrUser.photoUrl !== null) {
           this.changeMemberPhoto(this.currenrUser.photoUrl);
+          } else {
+          this.changeMemberPhoto('../../assets/user.jpg');
+          }
         }
       });
   }
 
-  register(model: any) {
+  register(user: User) {
     return this.http.post(
       this.baseurl + 'register',
-      model,
+      user,
       this.getRequestOptions()
     );
   }
