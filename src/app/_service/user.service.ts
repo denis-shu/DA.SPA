@@ -1,10 +1,11 @@
-import { Injectable } from "@angular/core";
-import { environment } from "../../environments/environment";
-import { Http, RequestOptions, Headers, Response } from "@angular/http";
-import { Observable } from "rxjs/Observable";
-import { User } from "../_Models/User";
-import { AuthHttp } from "angular2-jwt";
-import { PaginatedResult } from '../_Models/pagination';
+import { PaginatedResult } from './../_Models/pagination';
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+import { Http, RequestOptions, Headers, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { User } from '../_Models/User';
+import { AuthHttp } from 'angular2-jwt';
+import { Message } from '../_Models/message';
 
 @Injectable()
 export class UserService {
@@ -12,7 +13,12 @@ export class UserService {
 
   constructor(private authHttp: AuthHttp) {}
 
-  getUsers(page?: number, itemsPerPage?: number, userParams?: any, likesParam?: string) {
+  getUsers(
+    page?: number,
+    itemsPerPage?: number,
+    userParams?: any,
+    likesParam?: string
+  ) {
     const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<
       User[]
     >();
@@ -71,14 +77,37 @@ export class UserService {
   }
 
   sendLike(id: number, recipientId: number) {
-    return this.authHttp
-      .post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {});
+    return this.authHttp.post(
+      this.baseUrl + 'users/' + id + '/like/' + recipientId,
+      {}
+    );
   }
 
   deletePhoto(userId: number, id: number) {
     return this.authHttp.delete(
       this.baseUrl + 'users/' + userId + '/photos/' + id
     );
+  }
+
+  getMessages(
+    id: number,
+    page?: number,
+    itemsPerPage?: number,
+    messageContainer?: string
+  ) {
+    const paginatedResult: PaginatedResult<Message[]> = new PaginatedResult<
+      Message[]
+    >();
+
+    let queryString = '?MessageContainer=' + messageContainer + '&';
+    if (page != null && itemsPerPage != null) {
+    queryString += '&pageNumber' + page + '&pageSize' + itemsPerPage;
+    }
+
+    return this.authHttp.get(this.baseUrl + '/users/' + id + '/messages' + queryString)
+    .map((res: Response) => {
+        paginatedResult.result = res.json();
+    });
   }
 
   // private jwt() {
