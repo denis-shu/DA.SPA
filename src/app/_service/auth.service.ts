@@ -37,7 +37,6 @@ export class AuthService {
           this.currenrUser = user.user;
           console.log(this.decodedToken);
           this.userToken = user.tokenString;
-          
           if (this.currenrUser.photoUrl !== null) {
           this.changeMemberPhoto(this.currenrUser.photoUrl);
           } else {

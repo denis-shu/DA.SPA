@@ -1,3 +1,4 @@
+import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../_Models/User';
 import { UserService } from '../../_service/user.service';
@@ -5,6 +6,7 @@ import { AlertifyService } from '../../_service/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryOptions, NgxGalleryAnimation } from 'ngx-gallery';
 import { NgxGalleryImage } from 'ngx-gallery';
+import { TabsetComponent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-memberdetail',
@@ -12,6 +14,7 @@ import { NgxGalleryImage } from 'ngx-gallery';
   styleUrls: ['./memberdetail.component.css']
 })
 export class MemberDetailComponent implements OnInit {
+  @ViewChild('memberTabs') memberTabs: TabsetComponent;
   user: User;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
@@ -23,9 +26,12 @@ export class MemberDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe(data => (this.user = data['user']));
-console.log(this.user.photos);
-    this.galleryOptions = [];
-    this.galleryImages = [];
+    this.route.queryParams.subscribe(params => {
+      //this.memberTabs.tabs[params['tab']].active = true;
+    });
+
+     this.galleryOptions = [];
+     this.galleryImages = [];
 
     this.galleryOptions = [
       {
@@ -34,7 +40,7 @@ console.log(this.user.photos);
         imagePercent: 100,
         thumbnailsColumns: 4,
         imageAnimation: NgxGalleryAnimation.Slide,
-        preview: false, 
+        preview: false
       }
     ];
     this.galleryImages = this.getImages();
@@ -51,5 +57,8 @@ console.log(this.user.photos);
       });
     }
     return imagesUrls;
+  }
+  selectTab(tabid: number) {
+    this.memberTabs.tabs[tabid].active = true;
   }
 }

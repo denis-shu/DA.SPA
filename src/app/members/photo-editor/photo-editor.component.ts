@@ -1,16 +1,16 @@
-import { AlertifyService } from "./../../_service/alertify.service";
-import { UserService } from "./../../_service/user.service";
-import { AuthService } from "./../../_service/auth.service";
-import { environment } from "./../../../environments/environment";
-import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
-import { FileUploader } from "ng2-file-upload";
-import { Photo } from "../../_Models/Photo";
-import * as _ from "underscore";
-import { JsonpModule } from "@angular/http";
+import { AlertifyService } from './../../_service/alertify.service';
+import { UserService } from './../../_service/user.service';
+import { AuthService } from './../../_service/auth.service';
+import { environment } from './../../../environments/environment';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { FileUploader } from 'ng2-file-upload';
+import { Photo } from '../../_Models/Photo';
+import * as _ from 'underscore';
+import { JsonpModule } from '@angular/http';
 
 @Component({
-  selector: "app-photo-editor",
-  templateUrl: "./photo-editor.component.html",
+  selector: 'app-photo-editor',
+  templateUrl: './photo-editor.component.html',
   styleUrls: ['./photo-editor.component.css']
 })
 export class PhotoEditorComponent implements OnInit {

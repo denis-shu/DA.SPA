@@ -99,15 +99,48 @@ export class UserService {
       Message[]
     >();
 
-    let queryString = '?MessageContainer=' + messageContainer + '&';
+    let queryString = '?MessageContainer=' + messageContainer;
     if (page != null && itemsPerPage != null) {
-    queryString += '&pageNumber' + page + '&pageSize' + itemsPerPage;
+      queryString += '&pageNumber=' + page + '&pageSize=' + itemsPerPage;
     }
-
-    return this.authHttp.get(this.baseUrl + '/users/' + id + '/messages' + queryString)
-    .map((res: Response) => {
+    console.log(queryString);
+    return this.authHttp
+      .get(this.baseUrl + 'users/' + id + '/message' + queryString)
+      .map((res: Response) => {
         paginatedResult.result = res.json();
+        console.log('UserService', paginatedResult);
+
+        if (res.headers.get('Pagination') != null) {
+          paginatedResult.pagination = JSON.parse(
+            res.headers.get('Pagination')
+          );
+        }
+        return paginatedResult;
+      });
+  }
+
+  getMessageThread(id: number, recipientId: number) {
+    return this.authHttp
+      .get(this.baseUrl + 'users/' + id + '/message/thread/' + recipientId)
+      .map((res: Response) => {
+        return res.json();
+      });
+  }
+
+  deleteMessage(id: number, userId: number) {
+    return this.authHttp.post(this.baseUrl + 'users/' + userId + '/message/' + id, {});
+  }
+
+  sendMessage(id: number, message: Message) {
+    return this.authHttp.post(this.baseUrl + 'users/' + id + '/message/', message)
+    .map((res: Response) => {
+      return res.json();
     });
+  }
+
+  markAsRead(userId: number, messageId: number) {
+    return this.authHttp.post(this.baseUrl + 'users/' + userId + '/message/' + messageId + '/read', {})
+    .subscribe()
   }
 
   // private jwt() {
