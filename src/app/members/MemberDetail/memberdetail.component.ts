@@ -27,11 +27,12 @@ export class MemberDetailComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(data => (this.user = data['user']));
     this.route.queryParams.subscribe(params => {
-      //this.memberTabs.tabs[params['tab']].active = true;
+      const selected = params['tab'];
+      this.memberTabs.tabs[selected > 0 ? selected : 0].active = true;
     });
 
-     this.galleryOptions = [];
-     this.galleryImages = [];
+    this.galleryOptions = [];
+    this.galleryImages = [];
 
     this.galleryOptions = [
       {

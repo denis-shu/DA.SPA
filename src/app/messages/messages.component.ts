@@ -29,15 +29,10 @@ export class MessagesComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.route.data = data['messages'].result;
       this.pagination = data['messages'].pagination;
-      console.log('P', this.pagination);
     });
   }
 
   loadMessages() {
-    console.log('nameid :' + this.authService.decodedToken.nameid,
-    'currentPage: ' + this.pagination.currentPage,
-    'itemPerPage: ' + this.pagination.itemsPerPage,
-    'Container' + this.messageContainer);
     this.userService
       .getMessages(
         this.authService.decodedToken.nameid,
@@ -47,8 +42,6 @@ export class MessagesComponent implements OnInit {
       )
       .subscribe(
         (res: PaginatedResult<Message[]>) => {
-          console.log('2',  this.messages = res.result,
-          this.pagination = res.pagination);
           this.messages = res.result;
           this.pagination = res.pagination;
         },

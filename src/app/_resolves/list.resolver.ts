@@ -17,7 +17,7 @@ import 'rxjs/add/operator/catch';
 export class ListResolver implements Resolve<User[]> {
   PageSize = 6;
   PageNumber = 1;
-  likesParam = '';
+  likesParam = 'Likers';
   constructor(
     private userSrvice: UserService,
     private router: Router,

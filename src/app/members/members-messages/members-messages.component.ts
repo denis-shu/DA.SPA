@@ -4,7 +4,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../../_service/auth.service';
 import { AlertifyService } from '../../_service/alertify.service';
 import * as _ from 'underscore';
-import "rxjs/add/operator/do";
+import 'rxjs/add/operator/do';
 
 @Component({
   selector: 'app-members-messages',
@@ -13,7 +13,7 @@ import "rxjs/add/operator/do";
 })
 export class MembersMessagesComponent implements OnInit {
   @Input() userId: number;
-  messages: Message[] = new Array();
+  messages: Message[];
   newMessage: any = {};
 
   constructor(
@@ -50,8 +50,9 @@ export class MembersMessagesComponent implements OnInit {
   sendMessage(){
     this.newMessage.recipientId = this.userId;
     this._userService.sendMessage(this.auth.decodedToken.nameid, this.newMessage)
+    // tslint:disable-next-line:no-shadowed-variable
     .subscribe(msg => {
-     this.messages.unshift(msg);    
+     this.messages.unshift(msg);
      this.newMessage.content = '';
     }, err => {
      this.alert.error(err);

@@ -4,12 +4,12 @@ import { Component, OnInit } from "@angular/core";
 import { User } from "../_Models/User";
 import { AuthService } from "../_service/auth.service";
 import { UserService } from "../_service/user.service";
-import { AlertifyService } from "../_service/alertify.service";
+import { AlertifyService } from '../_service/alertify.service';
 
 @Component({
-  selector: "app-lists",
-  templateUrl: "./lists.component.html",
-  styleUrls: ["./lists.component.css"]
+  selector: 'app-lists',
+  templateUrl: './lists.component.html',
+  styleUrls: ['./lists.component.css']
 })
 export class ListsComponent implements OnInit {
   users: User[];
@@ -24,11 +24,11 @@ export class ListsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.likesParam = 'Likers';
     this.route.data.subscribe(data => {
-      this.users = data["user"].result;
-      this.pagination = data["user"].pagination;
+      this.users = data['user'].result;
+      this.pagination = data['user'].pagination;
     });
-    this.likesParam = "Likers";
   }
 
   loadUser() {

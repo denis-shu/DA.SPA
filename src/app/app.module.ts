@@ -1,3 +1,4 @@
+
 import { ListResolver } from './_resolves/list.resolver';
 import { MemberListResolver } from './_resolves/member-list.resolver';
 import { BrowserModule } from '@angular/platform-browser';
@@ -6,6 +7,8 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxGalleryModule } from 'ngx-gallery';
 import {TimeAgoPipe} from 'time-ago-pipe';
+import {JwtModule} from '@auth0/angular-jwt';
+import {HttpClientModule} from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -22,7 +25,6 @@ import { AuthGuard } from './_guard/auth.guard';
 import { UserService } from './_service/user.service';
 import { MemberlistComponent } from './members/memberlist/memberlist.component';
 import { MemberCartComponent } from './members/member-cart/member-cart.component';
-import { AuthModule } from './auth/auth.module';
 import { MemberDetailComponent } from './members/MemberDetail/MemberDetail.component';
 import { DetailResolver } from './_resolves/detail.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
@@ -30,16 +32,24 @@ import { MemberEditResolver } from './_resolves/member-edit.resolver';
 import { PreventUnsafeChanges } from './_guard/prevent-unsavedchanges.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
-import { AuthComponent } from './auth/auth.component';
 import { MessagesResolver } from './_resolves/message.resolver';
 import { MembersMessagesComponent } from './members/members-messages/members-messages.component';
+
+export function getToken(): string {
+  return localStorage.getItem('token');
+}
+
+export const jwtConfig = {
+  tokenGetter: getToken,
+  whitelistedDomains: ['localhost:5000']
+};
+
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
-    AuthComponent,
     RegisterComponent,
     MemberlistComponent,
     ListsComponent,
@@ -57,14 +67,17 @@ import { MembersMessagesComponent } from './members/members-messages/members-mes
     FormsModule,
     BsDropdownModule.forRoot(),
     RouterModule.forRoot(appRoutes),
-    AuthModule,
     TabsModule.forRoot(),
     NgxGalleryModule,
     FileUploadModule,
     ReactiveFormsModule,
     BsDatepickerModule.forRoot(),
     PaginationModule.forRoot(),
-    ButtonsModule.forRoot()
+    ButtonsModule.forRoot(),
+    HttpClientModule,
+    JwtModule.forRoot({
+      config: jwtConfig
+    })
   ],
   providers: [
     AuthService,

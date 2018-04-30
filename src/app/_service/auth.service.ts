@@ -1,22 +1,24 @@
+import { Headers } from '@angular/http';
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
 import { User } from '../_Models/User';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthUser } from '../_Models/AuthUser';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthService {
-  baseurl = 'http://localhost:5000/api/auth/';
+  baseurl = environment.apiUrl;
   userToken: any;
   decodedToken: any;
   currenrUser: User;
-  jwtHelper: JwtHelper = new JwtHelper();
   private photoUrl = new BehaviorSubject<string>('../../assets/user.jpg');
   currentPhotoUrl = this.photoUrl.asObservable();
 
   // tslint:disable-next-line:no-shadowed-variable
-  constructor(private http: Http) {}
+  constructor(private http: HttpClient, private jwtHelperService: JwtHelperService) {}
 
   changeMemberPhoto(photoUrl: string) {
     this.photoUrl.next(photoUrl);
@@ -26,17 +28,14 @@ export class AuthService {
 
   login(model: any) {
     return this.http
-      .post(this.baseurl + 'login', model, this.getRequestOptions())
-      .map((res: Response) => {
-        console.log(res, 'ress');
-        const user = res.json();
-        if (user && user.tokenString) {
-          localStorage.setItem('token', user.tokenString);
-          localStorage.setItem('user', JSON.stringify(user.user));
-          this.decodedToken = this.jwtHelper.decodeToken(user.tokenString);
-          this.currenrUser = user.user;
-          console.log(this.decodedToken);
-          this.userToken = user.tokenString;
+      .post<AuthUser>(this.baseurl + 'auth/login', model,  {headers: new HttpHeaders().set('content-type', 'application/json')})
+      .map(resUser => {
+        if (resUser && resUser.tokenString) {
+          localStorage.setItem('token', resUser.tokenString);
+          localStorage.setItem('user', JSON.stringify(resUser.user));
+          this.decodedToken = this.jwtHelperService.decodeToken(resUser.tokenString);
+          this.currenrUser = resUser.user;
+          this.userToken = resUser.tokenString;
           if (this.currenrUser.photoUrl !== null) {
           this.changeMemberPhoto(this.currenrUser.photoUrl);
           } else {
@@ -48,18 +47,23 @@ export class AuthService {
 
   register(user: User) {
     return this.http.post(
-      this.baseurl + 'register',
+      this.baseurl + 'auth/register',
       user,
-      this.getRequestOptions()
+      {headers: new HttpHeaders().set('content-type', 'application/json')}
     );
   }
 
   loggedIn() {
-    return tokenNotExpired('token');
+    const token = this.jwtHelperService.tokenGetter();
+    if (!token) {
+      return false;
+    }
+
+    return !this.jwtHelperService.isTokenExpired(token);
   }
 
-  private getRequestOptions() {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    return new RequestOptions({ headers: headers });
-  }
+  // private getRequestOptions() {
+  //   const headers = new Headers({ 'Content-Type': 'application/json' });
+  //   return new RequestOptions({ headers: headers });
+  // }
 }
